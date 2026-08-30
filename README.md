@@ -5,7 +5,7 @@
 - Nome do aluno: Rebeka Júlia Araújo
 - RGM: 40601447
 - Formato da solução: script Python (linha de comando)
-- Link do vídeo: 
+- Link do vídeo: https://youtu.be/8Ggkw3wXB6c
 - Link do Colab, se aplicável: não se aplica (solução rodou localmente via VSCode)
 
 ## Objetivo
