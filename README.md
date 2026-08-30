@@ -5,7 +5,7 @@
 - Nome do aluno: Rebeka Júlia Araújo
 - RGM: 40601447
 - Formato da solução: script Python (linha de comando)
-- Link do vídeo: _[preencher após gravar]_
+- Link do vídeo: 
 - Link do Colab, se aplicável: não se aplica (solução rodou localmente via VSCode)
 
 ## Objetivo
@@ -18,6 +18,7 @@ O sistema implementa o núcleo de recuperação (retrieval) de um RAG: dada uma 
 httpx/docs/**/*.md → chunks (por seção + tamanho fixo) + metadados
 → embeddings (sentence-transformers) → matriz de embeddings em memória
 → busca por similaridade de cosseno → top_k resultados com trecho, fonte e score
+→ (opcional) geração fundamentada via API do Gemini, citando as fontes
 ```
 
 ## Como executar do zero
@@ -50,6 +51,12 @@ httpx/docs/**/*.md → chunks (por seção + tamanho fixo) + metadados
    # roda as perguntas de teste obrigatórias da prova
    python busca.py --demo
    ```
+6. (Opcional) Gerar uma resposta fundamentada com a API do Gemini:
+   ```powershell
+   $env:GOOGLE_API_KEY = "sua-chave-aqui"
+   python gerar_resposta.py "Como fazer autenticação básica com httpx?"
+   ```
+   Sem a variável `GOOGLE_API_KEY` definida (ou se a chamada falhar), a busca continua funcionando normalmente — só a geração é desativada.
 
 ## Decisões técnicas
 
@@ -91,7 +98,17 @@ Cada chunk carrega, desde a criação: o caminho relativo do arquivo de origem, 
 - Como o sistema reagiu: retornou os 3 chunks "menos distantes" tecnicamente (scores baixos, entre 0.16 e 0.19), sem nenhuma relação real com a pergunta — o sistema não tem um mecanismo para dizer "não sei".
 - Como essa reação poderia melhorar: adicionar um limiar mínimo de score, abaixo do qual o sistema responde explicitamente que não encontrou informação relevante, em vez de sempre devolver os top_k "melhores dentre os piores".
 
+## Extensão opcional: avaliação simples da recuperação
+
+O script `avaliacao.py` testa 6 perguntas com fonte esperada conhecida e verifica se essa fonte aparece entre os `top_k` resultados. Resultado: **5/6 corretos (83%)**. A única falha foi a pergunta sobre uso assíncrono do HTTPX, cuja fonte esperada (`docs/async.md`) não apareceu no top 3 — o sistema priorizou trechos de `advanced/proxies.md` e `advanced/transports.md`. Isso é discutido também na seção de limitações abaixo.
+
+## Extensão opcional: geração fundamentada
+
+O script `gerar_resposta.py` usa os `top_k` trechos recuperados como contexto e pede à API do Gemini (`gemini-3.6-flash`, nível gratuito) que responda apenas com base nesse contexto, citando as fontes. A chave de API é lida da variável de ambiente `GOOGLE_API_KEY` — nunca fica no código. Se a chave não estiver definida ou a chamada falhar por qualquer motivo (cota, rede, etc.), a busca continua funcionando normalmente e a geração é apenas ignorada, com um aviso.
+
 ## Limitações conhecidas
+
+- Na avaliação simples de recuperação, a pergunta sobre uso assíncrono do HTTPX não trouxe `docs/async.md` entre os 5 primeiros resultados — o sistema priorizou trechos de outras seções avançadas (proxies, transports, third_party_packages). Foi confirmado que o arquivo `async.md` está devidamente indexado (18 chunks gerados a partir dele), então não se trata de um bug de leitura, e sim de uma limitação real da similaridade semântica: o vocabulário da pergunta ("assíncrona") teve menos sobreposição com o texto do arquivo do que se esperava, e outros trechos técnicos acabaram competindo melhor no ranking.
 
 - O sistema sempre retorna `top_k` resultados, mesmo quando nenhum é realmente relevante (não há corte por score mínimo) — ficou evidente na pergunta fora do escopo, cujos scores (~0.16-0.19) são bem mais baixos que os de perguntas relevantes (~0.6-0.7), mas ainda assim são exibidos como se fossem resultados válidos.
 - Não há etapa de geração de resposta em linguagem natural — apenas recuperação dos trechos e fontes.
