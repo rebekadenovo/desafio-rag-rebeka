@@ -1,7 +1,6 @@
 venv/
 __pycache__/
 *.pyc
-httpx/
 Anotacoes_da_aula.md
 CHECKLIST_ENTREGA.md
 FONTES_E_APOIO.md
