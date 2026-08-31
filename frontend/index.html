@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Busca semântica — documentação HTTPX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1>Pergunte algo sobre o HTTPX.<br />A resposta mora nos docs.</h1>
+      <p class="hero-sub">
+        Busca semântica local sobre a documentação oficial do HTTPX —
+        sem API paga, com a fonte exata de cada resultado.
+      </p>
+
+      <form id="form-busca" class="search-bar">
+        <input
+          id="input-pergunta"
+          type="text"
+          placeholder="ex: como configurar um timeout?"
+          autocomplete="off"
+        />
+        <button type="submit">Buscar</button>
+      </form>
+
+      <div class="search-meta">
+        <label for="select-topk">resultados</label>
+        <select id="select-topk">
+          <option value="3" selected>3</option>
+          <option value="5">5</option>
+        </select>
+        <span id="status-conexao" class="status status--checking">verificando servidor…</span>
+      </div>
+    </header>
+
+    <main id="resultados-container" class="resultados-container" aria-live="polite">
+      <div id="resposta-gerada" class="resposta-gerada" hidden></div>
+      <div id="resultados" class="resultados">
+        <p class="dica">
+          Sem conexão com o backend, nada aparece aqui. Rode
+          <code>python app.py</code> na raiz do projeto antes de buscar.
+        </p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Núcleo de recuperação de um RAG sobre a documentação do
+        <a href="https://github.com/encode/httpx" target="_blank" rel="noopener">HTTPX</a>.
+        Código completo e vídeo de apresentação no
+        <a href="https://github.com/rebekadenovo/desafio-rag-rebeka" target="_blank" rel="noopener">repositório</a>.
+      </p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

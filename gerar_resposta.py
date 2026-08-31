@@ -30,11 +30,12 @@ def montar_prompt(pergunta: str, resultados: list[dict]) -> str:
     )
 
     return f"""Você é um assistente que responde SOMENTE com base no contexto abaixo,
-extraído da documentação oficial do HTTPX. Regras:
+extraído da documentação oficial do HTTPX (em inglês). Regras:
 
-1. Responda apenas com informações presentes no contexto.
-2. Cite a fonte (o nome do arquivo) de onde tirou cada informação.
-3. Se o contexto não contiver a resposta, diga claramente que não encontrou
+1. Responda SEMPRE em português do Brasil, mesmo que o contexto esteja em inglês.
+2. Responda apenas com informações presentes no contexto.
+3. Cite a fonte (o nome do arquivo) de onde tirou cada informação.
+4. Se o contexto não contiver a resposta, diga claramente que não encontrou
    essa informação na documentação -- não invente nada.
 
 Contexto:
