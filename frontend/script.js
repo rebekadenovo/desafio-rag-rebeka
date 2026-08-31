@@ -86,8 +86,6 @@ function renderizarResultados(resultados) {
     const secao = document.createElement("p");
     secao.className = "resultado-secao";
     secao.textContent = r.secao;
-    secao.style.margin = "0 0 0.5rem";
-    secao.style.fontSize = "0.82rem";
 
     const barra = document.createElement("div");
     barra.className = "barra-score";
